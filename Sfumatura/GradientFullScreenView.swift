@@ -5,6 +5,7 @@
 //  Created by Andrea Bottino on 15/03/2024.
 //
 
+import Photos
 import SwiftUI
 
 struct GradientFullScreenView: View {
@@ -47,15 +48,55 @@ struct GradientFullScreenView: View {
                 }
             }
             Button("Download") {
-                
+                download()
             }
         }
         .fullScreenCover(isPresented: $showingEditScreen, content: {
             CustomSliderView(showingColorSheet: $showingEditScreen, gradientArray: $gradientsArray, editing: true, gradientToEdit: gradient)
         })
     }
+    
+    @MainActor func download() {
+        let gradientToSave = LinearGradient(gradient: Gradient(colors: gradient.colors),
+                                            startPoint: GradientModel.setStartPoint(using: gradient.direction),
+                                            endPoint: GradientModel.setEndPoint(using: gradient.direction))
+        
+        let baseImage =  Rectangle()
+            .frame(width: 1290, height: 2796)
+            .foregroundStyle(gradientToSave)
+            .background(Color.clear)
+        
+        let renderer =  ImageRenderer(content: baseImage)
+        
+        if let downloadImage = renderer.cgImage {
+            
+            let uiImage = UIImage(cgImage: downloadImage)
+            if let data = uiImage.jpegData(compressionQuality: 0.8) {
+                PHPhotoLibrary.requestAuthorization { status in
+                    if status == .authorized {
+                        PHPhotoLibrary.shared().performChanges {
+                            let creationRequest = PHAssetCreationRequest.forAsset()
+                            creationRequest.addResource(with: .photo, data: data, options: nil)
+                        } completionHandler: { success, error in
+                            if success {
+                                print("Image saved successfully to Photos.")
+                            } else {
+                                print("Error saving image to Photos:", error?.localizedDescription ?? "Unknown error")
+                            }
+                        }
+                    } else {
+                        print("Authorization denied for accessing Photos.")
+                    }
+                }
+            }
+        } else {
+            print("Error: Image not found in bundle.")
+        }
+    }
 }
+
 
 #Preview {
     GradientFullScreenView(gradient: GradientModel(colors: [.red, .blue], direction: .diagRH), gradientsArray: .constant([GradientModel]()))
 }
+
