@@ -19,17 +19,15 @@ struct ContentView: View {
                     ContentUnavailableView("Oops, nothing to see here", systemImage: "paintbrush", description: Text("Tap the + button to create a new gradient"))
                 } else {
                     List {
-                        ForEach(gradientsArray, id: \.self) { gradient in
-                            NavigationLink(value: gradient) {
-                                CustomGradientView(gradient: gradient)
+                        ForEach(gradientsArray.indices, id: \.self) { index in
+                            NavigationLink(value: index) {
+                                CustomGradientView(gradient: gradientsArray[index])
                             }
-                            
                         }
                         .onDelete(perform: { indexSet in
                             deleteGradient(indexSet)
                         })
                         .listRowSeparator(.hidden)
-                        
                     }
                     .listStyle(.plain)
                     .environment(\.defaultMinListRowHeight, 100)
@@ -46,8 +44,8 @@ struct ContentView: View {
             .fullScreenCover(isPresented: $showingColorSheet, content: {
                 CustomSliderView(showingColorSheet: $showingColorSheet, gradientArray: $gradientsArray, editing: false, gradientToEdit: nil)
             })
-            .navigationDestination(for: GradientModel.self) { gradient in
-                GradientFullScreenView(gradient: gradient, gradientsArray: $gradientsArray)
+            .navigationDestination(for: Int.self) { int in
+                GradientFullScreenView(gradient: gradientsArray[int], gradientsArray: $gradientsArray)
             }
         }
     }

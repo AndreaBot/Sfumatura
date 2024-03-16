@@ -91,7 +91,7 @@ struct GradientFullScreenView: View {
     }
     
     func download(uiImage: UIImage) {
-        if let data = uiImage.jpegData(compressionQuality: 0.8) {
+        if let data = uiImage.jpegData(compressionQuality: 1.0) {
             PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
                     PHPhotoLibrary.shared().performChanges {

@@ -16,7 +16,6 @@ struct CustomGradientView: View {
                        startPoint: GradientModel.setStartPoint(using: gradient.direction),
                        endPoint: GradientModel.setEndPoint(using: gradient.direction))
             .clipShape(RoundedRectangle(cornerRadius: 20))
-      
     }
 }
 
