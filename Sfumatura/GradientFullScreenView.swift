@@ -41,15 +41,19 @@ struct GradientFullScreenView: View {
             Button("Edit") {
                 showingEditScreen = true
             }
+            Button("Download") {
+                if let image = createUiImage() {
+                    download(uiImage: image)
+                }
+            }
+            if let image = createUiImage() {
+                let swiftImage = Image(uiImage: image)
+                ShareLink(item: swiftImage, preview: SharePreview("Share your gradient", image: swiftImage))
+            }
             Button("Delete", role: .destructive) {
                 if let currentGradientIndex = gradientsArray.firstIndex(of: gradient) {
                     gradientsArray.remove(at: currentGradientIndex)
                     dismiss()
-                }
-            }
-            Button("Download") {
-                if let image = createUiImage() {
-                    download(uiImage: image)
                 }
             }
         }
@@ -78,7 +82,7 @@ struct GradientFullScreenView: View {
         }
     }
     
-    @MainActor func download(uiImage: UIImage) {
+    func download(uiImage: UIImage) {
         if let data = uiImage.jpegData(compressionQuality: 0.8) {
             PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
