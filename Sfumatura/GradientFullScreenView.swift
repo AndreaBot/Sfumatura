@@ -18,12 +18,15 @@ struct GradientFullScreenView: View {
     @State private var showOptions = false
     @State private var showingEditScreen = false
     
+    @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    
     var body: some View {
         VStack {
             LinearGradient(gradient: Gradient(colors: gradient.colors),
                            startPoint: GradientModel.setStartPoint(using: gradient.direction),
                            endPoint: GradientModel.setEndPoint(using: gradient.direction))
-            
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .padding()
         }
@@ -60,6 +63,11 @@ struct GradientFullScreenView: View {
         .fullScreenCover(isPresented: $showingEditScreen, content: {
             CustomSliderView(showingColorSheet: $showingEditScreen, gradientArray: $gradientsArray, editing: true, gradientToEdit: gradient)
         })
+        .alert(alertTitle, isPresented: $showingAlert) {
+            Button("OK") {}
+        } message: {
+            Text(alertMessage)
+        }
     }
     
     @MainActor func createUiImage() -> UIImage? {
@@ -91,13 +99,20 @@ struct GradientFullScreenView: View {
                         creationRequest.addResource(with: .photo, data: data, options: nil)
                     } completionHandler: { success, error in
                         if success {
-                            print("Image saved successfully to Photos.")
+                            alertTitle = "Success"
+                            alertMessage = "Image saved successfully to Photos"
+                            showingAlert = true
                         } else {
-                            print("Error saving image to Photos:", error?.localizedDescription ?? "Unknown error")
+                            alertTitle = "Oops..."
+                            alertMessage = "There was an error saving the image to Photos"
+                            showingAlert = true
                         }
                     }
                 } else {
                     print("Authorization denied for accessing Photos.")
+                    alertTitle = "Oops"
+                    alertMessage = "Authorization denied for accessing Photos. Please allow access in the app settings"
+                    showingAlert = true
                 }
             }
         }
