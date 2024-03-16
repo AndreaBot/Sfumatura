@@ -48,7 +48,9 @@ struct GradientFullScreenView: View {
                 }
             }
             Button("Download") {
-                download()
+                if let image = createUiImage() {
+                    download(uiImage: image)
+                }
             }
         }
         .fullScreenCover(isPresented: $showingEditScreen, content: {
@@ -56,7 +58,7 @@ struct GradientFullScreenView: View {
         })
     }
     
-    @MainActor func download() {
+    @MainActor func createUiImage() -> UIImage? {
         let gradientToSave = LinearGradient(gradient: Gradient(colors: gradient.colors),
                                             startPoint: GradientModel.setStartPoint(using: gradient.direction),
                                             endPoint: GradientModel.setEndPoint(using: gradient.direction))
@@ -69,28 +71,31 @@ struct GradientFullScreenView: View {
         let renderer =  ImageRenderer(content: baseImage)
         
         if let downloadImage = renderer.cgImage {
-            
             let uiImage = UIImage(cgImage: downloadImage)
-            if let data = uiImage.jpegData(compressionQuality: 0.8) {
-                PHPhotoLibrary.requestAuthorization { status in
-                    if status == .authorized {
-                        PHPhotoLibrary.shared().performChanges {
-                            let creationRequest = PHAssetCreationRequest.forAsset()
-                            creationRequest.addResource(with: .photo, data: data, options: nil)
-                        } completionHandler: { success, error in
-                            if success {
-                                print("Image saved successfully to Photos.")
-                            } else {
-                                print("Error saving image to Photos:", error?.localizedDescription ?? "Unknown error")
-                            }
+            return uiImage
+        } else {
+            return nil
+        }
+    }
+    
+    @MainActor func download(uiImage: UIImage) {
+        if let data = uiImage.jpegData(compressionQuality: 0.8) {
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == .authorized {
+                    PHPhotoLibrary.shared().performChanges {
+                        let creationRequest = PHAssetCreationRequest.forAsset()
+                        creationRequest.addResource(with: .photo, data: data, options: nil)
+                    } completionHandler: { success, error in
+                        if success {
+                            print("Image saved successfully to Photos.")
+                        } else {
+                            print("Error saving image to Photos:", error?.localizedDescription ?? "Unknown error")
                         }
-                    } else {
-                        print("Authorization denied for accessing Photos.")
                     }
+                } else {
+                    print("Authorization denied for accessing Photos.")
                 }
             }
-        } else {
-            print("Error: Image not found in bundle.")
         }
     }
 }
