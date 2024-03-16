@@ -97,13 +97,11 @@ struct CustomSliderView: View {
     }
     
     func modifyColorsArray() {
-        colorsArray[0].red = gradientToEdit!.colors[0].redComponent!
-        colorsArray[0].green = gradientToEdit!.colors[0].greenComponent!
-        colorsArray[0].blue = gradientToEdit!.colors[0].blueComponent!
-        
-        colorsArray[1].red = gradientToEdit!.colors[1].redComponent!
-        colorsArray[1].green = gradientToEdit!.colors[1].greenComponent!
-        colorsArray[1].blue = gradientToEdit!.colors[1].blueComponent!
+        for i in colorsArray.indices {
+            colorsArray[i].red = gradientToEdit!.colors[i].redComponent!
+            colorsArray[i].green = gradientToEdit!.colors[i].greenComponent!
+            colorsArray[i].blue = gradientToEdit!.colors[i].blueComponent!
+        }
     }
     
     func createGradient() {

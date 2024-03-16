@@ -48,6 +48,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6229CFB22BA6530300B6D060 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				62B26E7C2BA554DD00B369E5 /* GradientModel.swift */,
+				62B26E742BA5070500B369E5 /* ColorModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6229CFB32BA6532900B6D060 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				62B26E642BA5046200B369E5 /* ContentView.swift */,
+				62B26E722BA505B500B369E5 /* CustomSliderView.swift */,
+				62B26E782BA5143200B369E5 /* GradientFullScreenView.swift */,
+				6229CFB42BA6533C00B6D060 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6229CFB42BA6533C00B6D060 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				62B26E702BA504C900B369E5 /* ColorSliderComponent.swift */,
+				62B26E762BA50CB900B369E5 /* CustomGradientView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		62B26E562BA5046200B369E5 = {
 			isa = PBXGroup;
 			children = (
@@ -68,15 +97,10 @@
 			isa = PBXGroup;
 			children = (
 				62B26E622BA5046200B369E5 /* SfumaturaApp.swift */,
-				62B26E642BA5046200B369E5 /* ContentView.swift */,
-				62B26E762BA50CB900B369E5 /* CustomGradientView.swift */,
-				62B26E722BA505B500B369E5 /* CustomSliderView.swift */,
-				6229CFB02BA6423F00B6D060 /* Color Extension.swift */,
-				62B26E7C2BA554DD00B369E5 /* GradientModel.swift */,
+				6229CFB22BA6530300B6D060 /* Models */,
+				6229CFB32BA6532900B6D060 /* Views */,
 				62B26E7A2BA5549200B369E5 /* GradientDirection.swift */,
-				62B26E782BA5143200B369E5 /* GradientFullScreenView.swift */,
-				62B26E742BA5070500B369E5 /* ColorModel.swift */,
-				62B26E702BA504C900B369E5 /* ColorSliderComponent.swift */,
+				6229CFB02BA6423F00B6D060 /* Color Extension.swift */,
 				62B26E662BA5046500B369E5 /* Assets.xcassets */,
 				62B26E682BA5046500B369E5 /* Preview Content */,
 			);
