@@ -16,7 +16,7 @@ struct CustomSliderView: View {
     
     @State private var colorsArray = [
         ColorModel(red: 0, green: 0, blue: 0),
-       ColorModel(red: 0, green: 0, blue: 0)
+        ColorModel(red: 0, green: 0, blue: 0)
     ]
     
     @State private var activeColorIndex = 0
@@ -35,7 +35,7 @@ struct CustomSliderView: View {
             }
             
             ZStack(alignment: .bottom) {
-                LinearGradient(colors: setArray(),
+                LinearGradient(colors: setCurrentColors(),
                                startPoint: GradientModel.setStartPoint(using: direction),
                                endPoint: GradientModel.setEndPoint(using: direction))
                 
@@ -61,6 +61,13 @@ struct CustomSliderView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    
+                    Button {
+                        colorsCount += 1
+                        colorsArray.append(ColorModel(red: 0, green: 0, blue: 0))
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
                 
                 ColorSliderComponent(value: $colorsArray[activeColorIndex].red, color: .red)
@@ -68,7 +75,7 @@ struct CustomSliderView: View {
                 ColorSliderComponent(value: $colorsArray[activeColorIndex].blue, color: .blue)
                 
                 Button {
-                    editing ? editArray() : createGradient()
+                    editing ? confirmEditing() : createGradient()
                     showingColorSheet = false
                 } label: {
                     Text(editing ? "Confirm changes" : "Create gradient")
@@ -79,13 +86,17 @@ struct CustomSliderView: View {
         }
         .onAppear {
             if editing {
+                colorsCount = gradientToEdit!.colors.count
                 modifyColorsArray()
             }
         }
     }
     
     func modifyColorsArray() {
-        for i in colorsArray.indices {
+        for _ in 0..<gradientToEdit!.colors.count - 2 {
+            colorsArray.append(ColorModel(red: 0, green: 0, blue: 0))
+        }
+        for i in 0..<colorsCount{
             colorsArray[i].red = gradientToEdit!.colors[i].redComponent!
             colorsArray[i].green = gradientToEdit!.colors[i].greenComponent!
             colorsArray[i].blue = gradientToEdit!.colors[i].blueComponent!
@@ -93,28 +104,14 @@ struct CustomSliderView: View {
     }
     
     func createGradient() {
-        gradientArray.append(GradientModel(colors: [
-            Color(cgColor: CGColor(red: colorsArray[0].red,
-                                   green: colorsArray[0].green,
-                                   blue: colorsArray[0].blue,
-                                   alpha: 1)),
-            Color(cgColor: CGColor(red: colorsArray[1].red,
-                                   green: colorsArray[1].green,
-                                   blue: colorsArray[1].blue,
-                                   alpha: 1))],
-                                           direction: direction))
+        gradientArray.append(GradientModel(
+            colors: setCurrentColors(),
+            direction: direction)
+        )
     }
     
-    func editArray() {
-        let editedGradient = GradientModel(colors: [
-            Color(cgColor: CGColor(red: colorsArray[0].red,
-                                   green: colorsArray[0].green,
-                                   blue: colorsArray[0].blue,
-                                   alpha: 1)),
-            Color(cgColor: CGColor(red: colorsArray[1].red,
-                                   green: colorsArray[1].green,
-                                   blue: colorsArray[1].blue,
-                                   alpha: 1))],
+    func confirmEditing() {
+        let editedGradient = GradientModel(colors: setCurrentColors(),
                                            direction: direction)
         
         if let gradientIndex = gradientArray.firstIndex(of: gradientToEdit!) {
@@ -122,15 +119,14 @@ struct CustomSliderView: View {
         }
     }
     
-    func setArray() -> [Color] {
-        var array = [Color]()
+    func setCurrentColors() -> [Color] {
+        var colorArray = [Color]()
         for i in 0..<colorsCount {
-            let color = Color(red: colorsArray[i].red,
-                  green: colorsArray[i].green,
-                  blue: colorsArray[i].blue)
-            array.append(color)
+            colorArray.append(Color(red: colorsArray[i].red,
+                                    green: colorsArray[i].green,
+                                    blue: colorsArray[i].blue))
         }
-        return array
+        return colorArray
     }
 }
 
