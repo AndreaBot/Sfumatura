@@ -15,7 +15,8 @@ struct CustomGradientView: View {
         LinearGradient(gradient: Gradient(colors: gradient.colors),
                        startPoint: GradientModel.setStartPoint(using: gradient.direction),
                        endPoint: GradientModel.setEndPoint(using: gradient.direction))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+        .frame(width: UIScreen.main.bounds.width/2.35, height: UIScreen.main.bounds.height/2.35)
+        .clipShape(RoundedRectangle(cornerRadius: UIScreen.main.bounds.width/11.75))
     }
 }
 
