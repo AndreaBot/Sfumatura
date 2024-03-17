@@ -55,9 +55,22 @@ struct CustomSliderView: View {
             
             VStack {
                 HStack {
+                    Button {
+                        colorsCount -= 1
+                        colorsArray.remove(at: activeColorIndex)
+                        if activeColorIndex > 0 {
+                            activeColorIndex -= 1
+                        } else {
+                            activeColorIndex = 0
+                        }
+                    } label: {
+                        Image(systemName: "minus")
+                    }
+                    .disabled(colorsCount == 1)
+                    
                     Picker("Select color", selection: $activeColorIndex) {
                         ForEach(0..<colorsCount, id: \.self) { int in
-                            Text("Color \(int+1)")
+                            Text("\(int+1)")
                         }
                     }
                     .pickerStyle(.segmented)
@@ -69,6 +82,7 @@ struct CustomSliderView: View {
                         Image(systemName: "plus")
                     }
                 }
+                .padding(.bottom)
                 
                 ColorSliderComponent(value: $colorsArray[activeColorIndex].red, color: .red)
                 ColorSliderComponent(value: $colorsArray[activeColorIndex].green, color: .green)
